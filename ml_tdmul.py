@@ -23,30 +23,18 @@ log_dir = "./logs/"
 nb_walkers = 3
 
 def capture_window(title, output_filename="output.avi", fps=60, record_seconds=30):
-    # 查找特定标题的窗口
     window = gw.getWindowsWithTitle(title)[0]
-    # 确保窗口是活动的和最前面的（根据你的系统设置，这可能需要调整）
     window.activate()
     window.moveTo(0, 0)
-
-    # 获取窗口的位置和大小
     x, y, width, height = window.left, window.top, window.width, window.height
-
-    # 定义编解码器并创建 VideoWriter 对象
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(output_filename, fourcc, fps, (width, height))
-
-    # 计算录制的帧数
     num_frames = fps * record_seconds
-
     for _ in range(num_frames):
-        # 对指定区域进行屏幕捕捉
         img = pyautogui.screenshot(region=(x, y, width, height))
         frame = np.array(img)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # 转换颜色从BGR到RGB
-        out.write(frame)  # 写入帧到文件
-
-    # 完成后释放资源
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        out.write(frame) 
     out.release()
     cv2.destroyAllWindows()
 
@@ -334,6 +322,5 @@ if __name__ == "__main__":
     #               "terminate_on_fall" : False, "remove_on_fall" : False, "forward_reward" : 0.3,
     #               "max_cycles":500}
     eval_one_model(env_fn, model, num_games=5, render_mode="human", **env_kwargs)
-    
-    # 使用窗口标题调用函数
+
     # capture_window("Multiwalker",output_filename=str(time.time)+'.avi')
